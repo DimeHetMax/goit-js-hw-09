@@ -13,11 +13,6 @@ const refs ={
     spanMinEl: document.querySelector("span[data-minutes]"),
     spanSecEl: document.querySelector("span[data-seconds]"),
 }
-console.log(refs.spanDaysEl);
-console.log(refs.spanHoursEl);
-console.log(refs.spanMinEl);
-console.log(refs.spanSecEl);
-
 
 refs.button.setAttribute("disabled", "")
 refs.button.addEventListener("click", onButtonHandler)
@@ -48,7 +43,7 @@ const options = {
     },
   };
 
-const flapppp = flatpickr(refs.input, options);
+flatpickr(refs.input, options);
 
 function convertMs(ms) {
     // Number of milliseconds per unit of time
@@ -68,6 +63,7 @@ function convertMs(ms) {
 
     return { days, hours, minutes, seconds };
   }
+  
 function onButtonHandler(){
     clearInterval(intervalId)
 }
