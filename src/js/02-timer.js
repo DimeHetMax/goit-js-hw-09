@@ -1,8 +1,5 @@
-// Описан в документации
 import flatpickr from "flatpickr";
-// Дополнительный импорт стилей
 import "flatpickr/dist/flatpickr.min.css";
-
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
 const refs ={
@@ -15,7 +12,7 @@ const refs ={
 }
 
 refs.button.setAttribute("disabled", "")
-refs.button.addEventListener("click", onButtonHandler)
+refs.button.addEventListener("click", onButtonClick)
 let intervalId = null;
 
 const options = {
@@ -25,9 +22,9 @@ const options = {
     minuteIncrement: 1,
     onClose(selectedDates, dateStr, instance) {
         
-      const choseDate = selectedDates[0].getTime()
-      const nowDate = instance.now.getTime()
-      refs.button.setAttribute("disabled", "")
+      const choseDate = selectedDates[0].getTime();
+      const nowDate = instance.now.getTime();
+      refs.button.setAttribute("disabled", "");
 
       if( nowDate > choseDate){
         clearInterval(intervalId)
@@ -37,14 +34,14 @@ const options = {
       refs.button.removeAttribute("disabled", "")
       intervalId = setInterval(()=>{
             const currentTime = Date.now();
-            const deltaTime = convertMs(choseDate - currentTime)
-            console.log(deltaTime)
+            const deltaTime = convertMs(choseDate - currentTime);
+            console.log(deltaTime);
         }, 1000)
     },
   };
 
-flatpickr(refs.input, options);
-
+const result = flatpickr(refs.input, options);
+console.log(result)
 function convertMs(ms) {
     // Number of milliseconds per unit of time
     const second = 1000;
@@ -63,8 +60,8 @@ function convertMs(ms) {
 
     return { days, hours, minutes, seconds };
   }
-  
-function onButtonHandler(){
-    clearInterval(intervalId)
-}
 
+function onButtonClick(){
+    clearInterval(intervalId)
+    console.log(result)
+}
