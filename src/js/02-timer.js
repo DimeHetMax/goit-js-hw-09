@@ -11,9 +11,10 @@ const refs ={
     spanSecEl: document.querySelector("span[data-seconds]"),
 }
 
-refs.button.setAttribute("disabled", "")
 refs.button.addEventListener("click", onButtonClick)
-let intervalId = null;
+refs.button.setAttribute("disabled", "")
+let choseDate;
+let intervalId; 
 
 const options = {
     enableTime: true,
@@ -21,27 +22,20 @@ const options = {
     defaultDate: new Date(),
     minuteIncrement: 1,
     onClose(selectedDates, dateStr, instance) {
-        
-      const choseDate = selectedDates[0].getTime();
+      console.log(dateStr)
+      choseDate = selectedDates[0].getTime();
       const nowDate = instance.now.getTime();
       refs.button.setAttribute("disabled", "");
-
       if( nowDate > choseDate){
-        clearInterval(intervalId)
         Notify.failure('Please choose a date in the future.')
         return
       }
-      refs.button.removeAttribute("disabled", "")
-      intervalId = setInterval(()=>{
-            const currentTime = Date.now();
-            const deltaTime = convertMs(choseDate - currentTime);
-            console.log(deltaTime);
-        }, 1000)
+      refs.button.removeAttribute("disabled", "");
     },
   };
 
-const result = flatpickr(refs.input, options);
-console.log(result)
+flatpickr(refs.input, options);
+
 function convertMs(ms) {
     // Number of milliseconds per unit of time
     const second = 1000;
@@ -59,9 +53,26 @@ function convertMs(ms) {
     const seconds = Math.floor((((ms % day) % hour) % minute) / second);
 
     return { days, hours, minutes, seconds };
-  }
-
+}
 function onButtonClick(){
-    clearInterval(intervalId)
-    console.log(result)
+    refs.button.setAttribute("disabled", "")
+    intervalId = setInterval(()=>{
+        const currentTime = Date.now()
+        let timeResult = choseDate-currentTime;
+        if(timeResult <= 0){
+            clearInterval(intervalId)
+            Notify.success("It's time to Rock-N-Roll")
+            return
+        }
+        timeRender(convertMs(timeResult))
+    }, 1000)
+}
+function timeRender({ days, hours, minutes, seconds }) {
+    refs.spanDaysEl.textContent = addLeadingZero(days);
+    refs.spanHoursEl.textContent = addLeadingZero(hours);
+    refs.spanMinEl.textContent = addLeadingZero(minutes);
+    refs.spanSecEl.textContent = addLeadingZero(seconds);
+}
+function addLeadingZero(value){
+    return value.toString().padStart(2, "0")
 }
